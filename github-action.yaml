@@ -41,7 +41,7 @@ steps:
       /put:
         put:
           body:
-            application/json: "{{ vars.arrayJsonRequestBody }}"
+            application/json: "{{ vars.arrayJsonReqtBody }}"
     test: |
       steps[2].res.status == 200
       && steps[2].res.body.json == vars.arrayJsonRequestBody
