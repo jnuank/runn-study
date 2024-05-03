@@ -1,0 +1,47 @@
+desc: GitHub Actionsから実行
+runners:
+  req:
+    endpoint: ${HTTPBIN_END_POINT:-https://httpbin.org/}
+vars:
+  args:
+    var: ${VAR:-C++}
+  jsonRequestBody:
+    foo: "test"
+    bar: 1
+  arrayJsonRequestBody:
+    - 
+      foo: "test1"
+      bar: 1
+    - 
+      foo: "test2"
+      bar: 2
+steps:
+  -
+    desc: request with vars
+    req:
+      /get?var={{ urlencode(vars.args.var) }}:
+        get:
+          body: null
+    test: |
+      steps[0].res.status == 200
+      && steps[0].res.body.args == vars.args
+  - 
+    desc: request body with vars
+    req:
+      /post:
+        post:
+          body:
+            application/json: "{{ vars.jsonRequestBody }}"
+    test: |
+      steps[1].res.status == 200
+      && steps[1].res.body.json == vars.jsonRequestBody
+  - 
+    desc: array request body
+    req:
+      /put:
+        put:
+          body:
+            application/json: "{{ vars.arrayJsonRequestBody }}"
+    test: |
+      steps[2].res.status == 200
+      && steps[2].res.body.json == vars.arrayJsonRequestBody
