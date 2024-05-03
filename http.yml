@@ -1,0 +1,19 @@
+desc: httpbin.org GET
+runners:
+  req: https://httpbin.org
+steps:
+- req:
+    /json:
+      get:
+        headers:
+          Accept: application/json
+        body: null
+  test: |
+    current.res.status == 200
+    && current.res.headers["Access-Control-Allow-Credentials"][0] == "true"
+    && current.res.headers["Access-Control-Allow-Origin"][0] == "*"
+    && current.res.headers["Content-Length"][0] == "429"
+    && current.res.headers["Content-Type"][0] == "application/json"
+    && "Date" in current.res.headers
+    && current.res.headers["Server"][0] == "gunicorn/19.9.0"
+    && compare(current.res.body, {"slideshow":{"author":"Yours Truly","date":"date of publication","slides":[{"title":"Wake up to WonderWidgets!","type":"all"},{"items":["Why \u003cem\u003eWonderWidgets\u003c/em\u003e are great","Who \u003cem\u003ebuys\u003c/em\u003e WonderWidgets"],"title":"Overview","type":"all"}],"title":"Sample Slide Show"}})
