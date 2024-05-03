@@ -15,3 +15,37 @@ steps:
     test: |
       # locationが検索URLになること
       current.url == "https://zenn.dev/search"
+  inputKeyword:
+    desc: "キーワードを入力してEnter"
+    cc:
+      actions:
+        - sendKeys:
+            sel: 'input[id=input-search-form]'
+            value: '{{ vars.keyword }}'
+        - wait:
+            time: '1sec'
+        - click: '#search-form > button'
+        - waitVisible: '#__next > div > div > section'
+        - location
+    test: |
+      # locationの検索URLにキーワードがセットされていること
+      current.url == "https://zenn.dev/search?q=" + vars.keyword
+  assertWithTopic:
+    desc: "関連トピックにPythonが含まれていること"
+    cc:
+      actions:
+        - text: 'a[class^="TopicList"]'
+    test: |
+      current.text == "Python"
+  captureScreen:
+    desc: "キャプチャ"
+    cc:
+      actions:
+        - wait:
+            time: '1sec'
+        - screenshot
+  saveScreenshot:
+    desc: "保存する"
+    dump:
+      expr: steps.captureScreen.png
+      out: screenshot.png
