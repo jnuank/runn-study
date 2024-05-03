@@ -1,0 +1,17 @@
+desc: CDPを使用
+runners:
+  cc: chrome://new
+vars:
+  keyword: ${KEYWORD:-python}
+steps:
+  startSearch:
+    desc: "検索アイコンクリック"
+    cc:
+      actions:
+        - navigate: https://zenn.dev/
+        - click: '#header-search'
+        - waitVisible: '#input-search-form'
+        - location
+    test: |
+      # locationが検索URLになること
+      current.url == "https://zenn.dev/search"
